@@ -1,2 +1,13 @@
 # pylazy
-Python High-level Lazy Toolbox 
+
+Python Lazy Toolbox - containing time-saving high-level utility functions.
+
+## Install
+
+```bash
+pip install --upgrade pylazy
+```
+
+## License
+
+-   [MIT License]("LICENSE")
