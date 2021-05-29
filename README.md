@@ -1,11 +1,11 @@
-# pylazy
+# puts - Python Utility Tool-kits
 
-Python Lazy Toolbox - containing time-saving high-level utility functions.
+Python high-level utility classes and functions.
 
 ## Install
 
 ```bash
-pip install --upgrade pylazy
+pip install --upgrade puts
 ```
 
 ## License

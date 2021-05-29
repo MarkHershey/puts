@@ -9,6 +9,23 @@ from typing import List, Tuple, Union
 from .logger import logger
 
 
+def alternative_file_path(fp: Union[str, Path]) -> Union[str, Path]:
+    isPath = True if isinstance(fp, Path) else False
+    fp: Path = Path(fp)
+    _parent: Path = fp.parent
+    _stem: str = fp.stem
+    _suffix: str = fp.suffix
+    counter = 0
+    while fp.is_file():
+        counter += 1
+        fp = _parent / f"{_stem}-{str(counter)}{_suffix}"
+
+    if isPath:
+        return fp
+    else:
+        return str(fp)
+
+
 def safe_rename(src: str, dest: str) -> None:
     """
     safety checks:

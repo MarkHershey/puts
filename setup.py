@@ -9,21 +9,20 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(
-    name="pylazy",
+    name="puts",
     version=VERSION,
     author="Mark He Huang",
     author_email="mark.h.huang@gmail.com",
     description="Python High-level Lazy Toolbox",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/MarkHershey/pylazy",
+    url="https://github.com/MarkHershey/puts",
     license="MIT",
     # package_dir=({"pylazy": "pylazy"}),
-    packages=find_packages(include=["pylazy", "pylazy.*"]),
+    packages=find_packages(include=["puts", "puts.*"]),
     install_requires=["colorlog>=4.1.0", "numpy"],
     extras_require={"dev": ["pytest", "tox", "wheel"]},
     keywords=[
-        "lazy",
         "utilities",
         "toolkits",
         "toolbox",
