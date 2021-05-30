@@ -1,8 +1,8 @@
-from setuptools import find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 MAJOR = 0
 MINOR = 0
-MICRO = 1
+MICRO = 2
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -18,7 +18,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/MarkHershey/puts",
     license="MIT",
-    packages=find_packages(include=["puts", "puts.*"]),
+    packages=find_namespace_packages(include=["puts", "puts.*"]),
     install_requires=["colorlog>=4.1.0", "numpy"],
     extras_require={
         "dev": [
