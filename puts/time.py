@@ -4,10 +4,16 @@ from typing import Callable
 
 
 def timeit(func: Callable) -> Callable:
+    """
+    Decorator for function
+
+    Return time elapsed as the first return value
+    """
+
     def wrapped_function(*args, **kwargs):
         start_time = time.time()
         result = func(*args, **kwargs)
-        elapsed = time.time() - start_time
+        elapsed: float = time.time() - start_time
         return elapsed, result
 
     return wrapped_function

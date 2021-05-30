@@ -9,106 +9,34 @@ from typing import List, Tuple, Union
 from .logger import logger
 
 
-def alternative_file_path(fp: Union[str, Path]) -> Union[str, Path]:
-    isPath = True if isinstance(fp, Path) else False
-    fp: Path = Path(fp)
-    _parent: Path = fp.parent
-    _stem: str = fp.stem
-    _suffix: str = fp.suffix
+def alternative_file_path(file_path: Union[str, Path]) -> Union[str, Path]:
+    """
+    To return an alternative path if a file already exists at the supplied path.
+
+    Accepts file_path in the argument as a string or a Path.
+    Returns the same type accordingly.
+    """
+    isPath = True if isinstance(file_path, Path) else False
+    file_path: Path = Path(file_path)
+    _parent: Path = file_path.parent
+    _stem: str = file_path.stem
+    _suffix: str = file_path.suffix
     counter = 0
-    while fp.is_file():
+    while file_path.is_file():
         counter += 1
-        fp = _parent / f"{_stem}-{str(counter)}{_suffix}"
+        file_path = _parent / f"{_stem}-{str(counter)}{_suffix}"
 
     if isPath:
-        return fp
+        return file_path
     else:
-        return str(fp)
-
-
-def safe_rename(src: str, dest: str) -> None:
-    """
-    safety checks:
-        1. check if source exists before rename
-        2. check if new name destination already exist before rename
-    Only rename file when passing above two checks
-    """
-    src = Path(src)
-    dest = Path(dest)
-
-    if not Path(src).exists():
-        logger.error(
-            f"safe_rename cannot be done, because source file '{src}' not found."
-        )
-        return
-    if Path(dest).exists():
-        logger.error(
-            f"safe_rename cannot be done, because destination file '{dest}' already exist."
-        )
-        return
-    try:
-        os.rename(src, dest)
-        logger.debug(f"'{src}' has been renamed to '{dest}'")
-    except Exception as err:
-        logger.error(f"Rename operation failed, reason: {err}")
-
-
-def safe_copy(src: str, dest: str) -> None:
-    """
-    safety checks:
-        1. check if source exists before copy
-        2. check if same-name file already exist in destination before copy
-    Only copy file when passing above two checks
-    """
-    src = Path(src)
-    dest = Path(dest)
-
-    if not Path(src).exists():
-        logger.error(
-            f"safe_copy cannot be done, because source file '{src}' not found."
-        )
-        return
-    if Path(dest).exists():
-        logger.warning(
-            f"safe_copy cannot be done, because destination file '{dest}' already exist."
-        )
-        return
-    try:
-        # subprocess.run(["cp", str(src), str(dest)])
-        shutil.copy2(src, dest)
-        logger.debug(f"'{src}' has been copied to '{dest}'")
-    except Exception as err:
-        logger.error(f"Copy operation failed, reason: {err}")
-
-
-def safe_move(src: str, dest: str) -> None:
-    """
-    safety checks:
-        1. check if source exists before move
-        2. check if same-name file already exist in destination before move
-    Only move file when passing above two checks
-    """
-    src = Path(src)
-    dest = Path(dest)
-
-    if not Path(src).exists():
-        logger.error(
-            f"safe_move cannot be done, because source file '{src}' not found."
-        )
-        return
-    if Path(dest).exists():
-        logger.warning(
-            f"safe_move cannot be done, because destination file '{dest}' already exist."
-        )
-        return
-    try:
-        os.move(src, dest)
-        logger.debug(f"'{src}' has been moved to '{dest}'")
-    except Exception as err:
-        logger.error(f"Move operation failed, reason: {err}")
+        return str(file_path)
 
 
 class MassCopier:
+    """
+    Multi-processing parallel safe copy operations
+    """
+
     CopyJob = Tuple[str, str]
     verbose = True
     overwrite = False
@@ -118,6 +46,7 @@ class MassCopier:
         self.copy_jobs: List[MassCopier.CopyJob] = []
 
     def add(self, src: str, dst: str) -> None:
+        """Verify and add copy jobs into MassCopier"""
         src = Path(src)
         if not src.exists():
             logger.error(f"Source file '{src}' not found.")
@@ -138,6 +67,7 @@ class MassCopier:
 
     @staticmethod
     def make_copy(copy_job: CopyJob) -> Union[str, CopyJob]:
+        """A copy job definition"""
         src, dst = copy_job
 
         if MassCopier.large_files:
@@ -178,6 +108,9 @@ class MassCopier:
         overwrite: bool = False,
         large_files: bool = False,
     ) -> None:
+        """
+        Submit copy jobs to multiprocessing pool and start actual copy operations.
+        """
         MassCopier.verbose = verbose
         MassCopier.overwrite = overwrite
         MassCopier.large_files = large_files
