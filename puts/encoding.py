@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 
 def is_ascii(text: str) -> bool:
-    """ Check if a string contains ascii character only. """
+    """Check if a string contains ascii character only."""
     if isinstance(text, str):
         try:
             text.encode("ascii")
@@ -53,7 +53,7 @@ def check_non_ascii_char(string: str) -> Tuple[str]:
 
 
 def is_ascii_only_file(filepath: str) -> bool:
-    """ Check if a file contains ascii character only. """
+    """Check if a file contains ascii character only."""
     filepath = Path(filepath)
     assert filepath.is_file()
 

@@ -1,13 +1,25 @@
+import shutil
 import time
 from datetime import datetime
 from typing import Callable
 
 
 def timeit(func: Callable) -> Callable:
-    """
-    Decorator for function
+    """A decorator for functions, add execution time of a function as an additional return value.
 
-    Return time elapsed as the first return value
+    Use as @timeit just above your function definition.
+
+    Args:
+        func: A callable, could be any function.
+
+    Returns:
+        A wrapped function (callable) with one additional return value.
+        Execution time (number of seconds) (int) is returned as the first return
+        value. Any return values of the origial function is returned as the
+        second value.
+
+    Raises:
+        None
     """
 
     def wrapped_function(*args, **kwargs):
@@ -20,6 +32,21 @@ def timeit(func: Callable) -> Callable:
 
 
 def timeitprint(func: Callable) -> Callable:
+    """A decorator for functions, prints execution time of a function as the side effect.
+
+    Use as @timeitprint just above your function definition.
+
+    Args:
+        func: A callable, could be any function.
+
+    Returns:
+        A wrapped function (callable) that is identicial to the origial function
+        with additional side effect: it prints the execution time to stdout.
+
+    Raises:
+        None
+    """
+
     def wrapped_function(*args, **kwargs):
         time_start = time.time()
         result = func(*args, **kwargs)
@@ -34,25 +61,22 @@ def timeitprint(func: Callable) -> Callable:
             time_elapsed = time_elapsed - minutes * 60
         seconds = round(time_elapsed, 3)
         func_name = func.__name__
+        try:
+            terminal_width = shutil.get_terminal_size().columns
+        except:
+            terminal_width = 50
 
         if hours:
-            print(
-                "====== Func '{}' finished in {} hrs, {} mins, {} secs ======\n".format(
-                    func_name, hours, minutes, int(seconds)
-                )
-            )
+            msg = f" Func '{func_name}' finished in {hours} hrs, {minutes} mins, {int(seconds)} secs "
+            print("{:=^{width}}\n".format(msg, width=terminal_width))
         elif minutes:
-            print(
-                "====== Func '{}' finished in {} mins, {:.2f} secs ======\n".format(
-                    func_name, minutes, seconds
-                )
+            msg = " Func '{}' finished in {} mins, {:.2f} secs ".format(
+                func_name, minutes, seconds
             )
+            print("{:=^{width}}\n".format(msg, width=terminal_width))
         else:
-            print(
-                "====== Func '{}' finished in {:.10f} secs ======\n".format(
-                    func_name, seconds
-                )
-            )
+            msg = " Func '{}' finished in {:.10f} secs ".format(func_name, seconds)
+            print("{:=^{width}}\n".format(msg, width=terminal_width))
 
         return result
 
@@ -60,8 +84,16 @@ def timeitprint(func: Callable) -> Callable:
 
 
 def timestamp_seconds() -> str:
-    """
-    Return a timestamp in 15-char string format: {YYYYMMDD}'T'{HHMMSS}
+    """Returns a 15-char string timestamp.
+
+    Args:
+        None
+
+    Returns:
+        A timestamp in 15-char string formatted as: {YYYYMMDD}'T'{HHMMSS}
+
+    Raises:
+        None
     """
     now = str(datetime.now().isoformat(sep="T", timespec="seconds"))
     ts: str = ""
@@ -72,8 +104,16 @@ def timestamp_seconds() -> str:
 
 
 def timestamp_microseconds() -> str:
-    """
-    Return a timestamp in 22-char string format: YYYYMMDD-HHMMSS-microseconds
+    """Returns a 22-char string timestamp.
+
+    Args:
+        None
+
+    Returns:
+        A timestamp in 15-char string formatted as: YYYYMMDD-HHMMSS-microseconds
+
+    Raises:
+        None
     """
     now = str(datetime.now().isoformat(sep="T", timespec="microseconds"))
     ts: str = ""
@@ -86,15 +126,14 @@ def timestamp_microseconds() -> str:
 
 
 if __name__ == "__main__":
+    ...
 
     @timeitprint
-    def tictok() -> None:
+    def compute() -> None:
         a = 1000000
-        for i in range(10000000):
+        for i in range(100000000):
             a -= 1
             b = a
         return
 
-    tictok()
-    print(timestamp_seconds())
-    print(timestamp_microseconds())
+    compute()
