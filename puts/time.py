@@ -50,9 +50,10 @@ def timeitprint(func: Callable) -> Callable:
     def wrapped_function(*args, **kwargs):
         time_start = time.time()
         result = func(*args, **kwargs)
-        time_end = time.time()
-        time_elapsed = time_end - time_start
+        time_elapsed = time.time() - time_start
+
         hours, minutes = 0, 0
+
         if time_elapsed >= 3600:
             hours = int(time_elapsed // 3600)
             time_elapsed = time_elapsed - hours * 3600
