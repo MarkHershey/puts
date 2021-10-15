@@ -1,61 +1,82 @@
 import logging
 import os
 from pathlib import Path
+from typing import Union
 
 import colorlog
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
 
-_log_dir = Path("logs/")
+def init_logger(
+    log_dir: Union[str, Path] = Path("logs/"),
+    stream_only: bool = False,
+    reset: bool = True,
+):
+    logger = logging.getLogger()
+    logger.setLevel(logging.DEBUG)
 
-if not _log_dir.is_dir():
-    os.mkdir(_log_dir)
+    # create the stream handler that logs everything with color to terminal
+    sh = colorlog.StreamHandler()
+    sh.setLevel(logging.DEBUG)
 
-_debug_log_fp: Path = _log_dir / "debug.log"
-_error_log_fp: Path = _log_dir / "error.log"
+    # define formatter for the stream handler
+    color_log_formatter = colorlog.ColoredFormatter(
+        fmt="%(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(message)s %(black)s(%(filename)s:%(lineno)s)",
+        datefmt=None,
+        reset=True,
+        log_colors={
+            "DEBUG": "green",
+            "INFO": "cyan",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "red,bg_yellow",
+        },
+        secondary_log_colors={},
+        style="%",
+    )
+    sh.setFormatter(color_log_formatter)
 
-_fh1 = logging.FileHandler(_debug_log_fp, mode="a")
-_fh1.setLevel(logging.DEBUG)
+    if not stream_only:
+        log_dir = Path(log_dir)
 
-_fh2 = logging.FileHandler(_error_log_fp, mode="a")
-_fh2.setLevel(logging.ERROR)
+        if not log_dir.is_dir():
+            os.mkdir(log_dir)
 
-_sh = colorlog.StreamHandler()
-_sh.setLevel(logging.DEBUG)
+        debug_log_fp: Path = log_dir / "debug.log"
+        error_log_fp: Path = log_dir / "error.log"
 
-# define formatter for logger file output
-_formatter = logging.Formatter(
-    fmt="%(asctime)s - %(levelname)-8s | %(filename)s:%(lineno)s | %(message)s ",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
-# define formatter for logger console output
-_color_formatter = colorlog.ColoredFormatter(
-    fmt="%(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(message)s %(black)s(%(filename)s:%(lineno)s)",
-    datefmt=None,
-    reset=True,
-    log_colors={
-        "DEBUG": "green",
-        "INFO": "cyan",
-        "WARNING": "yellow",
-        "ERROR": "red",
-        "CRITICAL": "red,bg_yellow",
-    },
-    secondary_log_colors={},
-    style="%",
-)
+        # create the first file handler that records all logs
+        fh1 = logging.FileHandler(debug_log_fp, mode="a")
+        fh1.setLevel(logging.DEBUG)
 
-# Set the formatter for each handler
-_fh1.setFormatter(_formatter)
-_fh2.setFormatter(_formatter)
-_sh.setFormatter(_color_formatter)
+        # create the second file handler that records error or more critical logs only
+        fh2 = logging.FileHandler(error_log_fp, mode="a")
+        fh2.setLevel(logging.ERROR)
 
-# Add all three handlers to the logger
-logger.addHandler(_fh1)
-logger.addHandler(_fh2)
-logger.addHandler(_sh)
+        # define formatter for file handlers
+        file_log_formatter = logging.Formatter(
+            fmt="%(asctime)s\t%(levelname)-8s\t%(filename)s:%(lineno)s\t%(message)s ",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+        fh1.setFormatter(file_log_formatter)
+        fh2.setFormatter(file_log_formatter)
+
+    # remove all existing handlers if any
+    if reset and logger.hasHandlers():
+        logger.handlers = []
+
+    # add colored Stream Handler to the logger
+    logger.addHandler(sh)
+    # add File Handlers to the logger
+    if not stream_only:
+        logger.addHandler(fh1)
+        logger.addHandler(fh2)
+
+    print(type(logger))
+    return logger
+
 
 if __name__ == "__main__":
+    logger = init_logger(stream_only=True)
     logger.debug("This is a debug message")
     logger.info("This is a message for your information")
     logger.warning("This is a warning message")

@@ -6,7 +6,9 @@ from multiprocessing import Pool
 from pathlib import Path
 from typing import List, Tuple, Union
 
-from .logger import logger
+from .logger import init_logger
+
+logger = init_logger()
 
 
 def alternative_file_path(file_path: Union[str, Path]) -> Union[str, Path]:
