@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from puts.file import alternative_file_path
+from puts import alternative_file_path
 
 project_root_dir = Path(__file__).resolve().parent.parent
 res_dir = project_root_dir / "tests/resources"

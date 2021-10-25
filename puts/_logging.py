@@ -71,9 +71,10 @@ def init_logger(
         logger.addHandler(fh1)
         logger.addHandler(fh2)
 
-    print(type(logger))
     return logger
 
+
+get_logger = init_logger
 
 if __name__ == "__main__":
     logger = init_logger(stream_only=True)

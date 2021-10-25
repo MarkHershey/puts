@@ -6,7 +6,7 @@ from multiprocessing import Pool
 from pathlib import Path
 from typing import List, Tuple, Union
 
-from .logger import init_logger
+from ._logging import init_logger
 
 logger = init_logger()
 
