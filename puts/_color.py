@@ -41,7 +41,7 @@ def _getRGBs(S, L, num=50, targNum=50):
     buffer_num = buffer_rgb_s.shape[0]
 
     if 0 < buffer_num < targNum:
-        fix_num = int(num ** 2 / buffer_num) + 5
+        fix_num = int(num**2 / buffer_num) + 5
         buffer_rgb_s = _getRGBs(S, L, num=fix_num, targNum=targNum)
 
     return buffer_rgb_s

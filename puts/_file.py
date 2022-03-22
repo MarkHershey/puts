@@ -6,10 +6,6 @@ from multiprocessing import Pool
 from pathlib import Path
 from typing import List, Tuple, Union
 
-from ._logging import init_logger
-
-logger = init_logger()
-
 
 def alternative_file_path(file_path: Union[str, Path]) -> Union[str, Path]:
     """
@@ -44,31 +40,32 @@ class MassCopier:
     overwrite = False
     large_files = False
 
-    def __init__(self):
+    def __init__(self, logger=None):
         self.copy_jobs: List[MassCopier.CopyJob] = []
+        self.logger = logger
 
     def add(self, src: str, dst: str) -> None:
         """Verify and add copy jobs into MassCopier"""
         src = Path(src)
         if not src.exists():
-            logger.error(f"Source file '{src}' not found.")
+            self.logger.error(f"Source file '{src}' not found.")
             return
 
         dst = Path(dst).resolve()
         if dst.is_file():
-            logger.warning(f"Destination path has existing file '{dst}'.")
+            self.logger.warning(f"Destination path has existing file '{dst}'.")
         elif dst.is_dir():
             dst = dst / src.name
             if dst.is_file():
                 dst = str(dst)
-                logger.warning(f"Destination path has existing file '{dst}'.")
+                self.logger.warning(f"Destination path has existing file '{dst}'.")
 
         src = str(src)
         dst = str(dst)
         self.copy_jobs.append((src, dst))
 
     @staticmethod
-    def make_copy(copy_job: CopyJob) -> Union[str, CopyJob]:
+    def make_copy(copy_job: CopyJob, logger=None) -> Union[str, CopyJob]:
         """A copy job definition"""
         src, dst = copy_job
 
@@ -92,7 +89,8 @@ class MassCopier:
         failed = True if completed.returncode != 0 else False
 
         if failed:
-            logger.error(f"Failed job: ({src}) -> ({dst})")
+            if logger:
+                logger.error(f"Failed job: ({src}) -> ({dst})")
             return copy_job
         else:
             # logger.debug(f"Succeeded job: ({src}) -> ({dst})")
@@ -135,7 +133,7 @@ class MassCopier:
         if interactive:
             _start = str(input("Start to copy (y/n)? ")).strip()
             if _start != "y":
-                logger.warning("Operation aborted by instruction.")
+                self.logger.warning("Operation aborted by instruction.")
                 return
 
         pool = Pool()

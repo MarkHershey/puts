@@ -40,6 +40,7 @@ def init_logger(
 
         if not log_dir.is_dir():
             os.mkdir(log_dir)
+            print("Created directory: {}".format(log_dir))
 
         debug_log_fp: Path = log_dir / "debug.log"
         error_log_fp: Path = log_dir / "error.log"
