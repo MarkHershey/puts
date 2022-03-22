@@ -43,6 +43,7 @@ def json_serial(obj: Union[datetime, date]) -> str:
 
     Example Usage:
         >>> import json
+        >>> from datetime import datetime
         >>> x = {"time": datetime.now()}
         >>> print(json.dumps(x, indent=4, default=json_serial))
 
