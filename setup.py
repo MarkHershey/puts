@@ -2,7 +2,7 @@ from setuptools import find_namespace_packages, setup
 
 MAJOR = 0
 MINOR = 0
-MICRO = 7
+MICRO = 8
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -11,8 +11,8 @@ with open("README.md", "r") as f:
 setup(
     name="puts",
     version=VERSION,
-    author="Mark He Huang",
-    author_email="mark.h.huang@gmail.com",
+    author="Mark Huang",
+    author_email="dev@markhh.com",
     description="Python Utility Tools",
     long_description=long_description,
     long_description_content_type="text/markdown",
