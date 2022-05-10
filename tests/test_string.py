@@ -20,8 +20,8 @@ class TestString(unittest.TestCase):
 
     def test_title_cap_advanced(self):
         self.assertEqual(
-            "The Assassin’s Cloak: An Anthology of the World’s Greatest Diarists",
+            "The Assassin's Cloak: An Anthology of the World's Greatest Diarists",
             title_cap(
-                "the assassin’s cloak: an anthology of the world’s greatest diarists"
+                "the assassin's cloak: an anthology of the world's greatest diarists"
             ),
         )

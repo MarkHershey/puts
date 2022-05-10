@@ -11,7 +11,13 @@ from ._encoding import (
 from ._file import MassCopier, alternative_file_path
 from ._logging import get_logger, init_logger
 from ._string import title_cap, title_capitalize
-from ._time import timeit, timeitprint, timestamp_microseconds, timestamp_seconds
+from ._time import (
+    timeit,
+    timeitprint,
+    timestamp_microseconds,
+    timestamp_milliseconds,
+    timestamp_seconds,
+)
 from ._utils import (
     convert_date_to_datetime,
     convert_datetime_to_date,

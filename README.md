@@ -3,7 +3,7 @@
 Python high-level helper classes and functions.
 
 [![](https://img.shields.io/pypi/v/puts)](https://pypi.org/project/puts/)
-[![](https://img.shields.io/pypi/dm/puts)](https://pypi.org/project/puts/)
+[![](https://img.shields.io/pypi/dm/puts)](https://pypistats.org/packages/puts)
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/puts/blob/master/LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 

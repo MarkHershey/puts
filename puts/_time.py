@@ -85,17 +85,9 @@ def timeitprint(func: Callable) -> Callable:
 
 
 def timestamp_seconds() -> str:
-    """Returns a 15-char string timestamp.
+    """Returns a 15-char string timestamp formatted as: {YYYYMMDD}T{HHMMSS}."""
 
-    Args:
-        None
-
-    Returns:
-        A timestamp in 15-char string formatted as: {YYYYMMDD}'T'{HHMMSS}
-
-    Raises:
-        None
-    """
+    # '2015-01-01T12:30:59'
     now = str(datetime.now().isoformat(sep="T", timespec="seconds"))
     ts: str = ""
     for i in now:
@@ -104,19 +96,26 @@ def timestamp_seconds() -> str:
     return ts
 
 
+def timestamp_milliseconds() -> str:
+    """Returns a 19-char string timestamp formatted as: YYYYMMDD-HHMMSS-sss."""
+
+    # '2015-01-01T12:30:59.000'
+    now = str(datetime.now().isoformat(sep="T", timespec="milliseconds"))
+    ts: str = ""
+    for i in now:
+        if i in ("T", "."):
+            ts += "-"
+        elif i not in (" ", ":", "-"):
+            ts += i
+    return ts
+
+
 def timestamp_microseconds() -> str:
-    """Returns a 22-char string timestamp.
+    """Returns a 22-char string timestamp formatted as: YYYYMMDD-HHMMSS-ffffff."""
 
-    Args:
-        None
-
-    Returns:
-        A timestamp in 15-char string formatted as: YYYYMMDD-HHMMSS-microseconds
-
-    Raises:
-        None
-    """
+    # '2015-01-01T12:30:59.000000'
     now = str(datetime.now().isoformat(sep="T", timespec="microseconds"))
+
     ts: str = ""
     for i in now:
         if i in ("T", "."):

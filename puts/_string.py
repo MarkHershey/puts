@@ -98,7 +98,7 @@ def title_capitalize(string: str) -> str:
     """
     MLA Style Capitalization in Titles
 
-    Prepositions, articles, and conjunctions aren’t capitalized (unless they’re the first or last word)
+    Prepositions, articles, and conjunctions aren't capitalized (unless they're the first or last word)
 
     Rule reference: https://www.grammarly.com/blog/capitalization-in-the-titles/
     """
