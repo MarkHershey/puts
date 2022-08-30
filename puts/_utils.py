@@ -72,34 +72,57 @@ _BOLD = _colorcode(1)
 _RESET = _colorcode(0)
 
 
-def print_green(string: str, bold=False) -> None:
-    print(f"{_BOLD if bold else ''}{_GREEN}{string}{_RESET}")
+def print_green(*args, bold=False, **kwargs) -> None:
+    sep = kwargs.get("sep", " ")
+    assert isinstance(sep, str)
+    string = sep.join([str(x) for x in args])
+    print(f"{_BOLD if bold else ''}{_GREEN}{string}{_RESET}", **kwargs)
+    return
 
 
-def print_yellow(string: str, bold=False) -> None:
-    print(f"{_BOLD if bold else ''}{_YELLOW}{string}{_RESET}")
+def print_yellow(*args, bold=False, **kwargs) -> None:
+    sep = kwargs.get("sep", " ")
+    assert isinstance(sep, str)
+    string = sep.join([str(x) for x in args])
+    print(f"{_BOLD if bold else ''}{_YELLOW}{string}{_RESET}", **kwargs)
+    return
 
 
-def print_red(string: str, bold=False) -> None:
-    print(f"{_BOLD if bold else ''}{_RED}{string}{_RESET}")
+def print_red(*args, bold=False, **kwargs) -> None:
+    sep = kwargs.get("sep", " ")
+    assert isinstance(sep, str)
+    string = sep.join([str(x) for x in args])
+    print(f"{_BOLD if bold else ''}{_RED}{string}{_RESET}", **kwargs)
+    return
 
 
-def print_cyan(string: str, bold=False) -> None:
-    print(f"{_BOLD if bold else ''}{_CYAN}{string}{_RESET}")
+def print_cyan(*args, bold=False, **kwargs) -> None:
+    sep = kwargs.get("sep", " ")
+    assert isinstance(sep, str)
+    string = sep.join([str(x) for x in args])
+    print(f"{_BOLD if bold else ''}{_CYAN}{string}{_RESET}", **kwargs)
+    return
 
 
-def print_bold(string: str, bold=True) -> None:
-    print(f"{_BOLD if bold else ''}{string}{_RESET}")
+def print_bold(*args, bold=False, **kwargs) -> None:
+    sep = kwargs.get("sep", " ")
+    assert isinstance(sep, str)
+    string = sep.join([str(x) for x in args])
+    print(f"{_BOLD if bold else ''}{string}{_RESET}", **kwargs)
+    return
 
 
 def print_with_color(
-    *args, color: str = "green", bold: bool = False, sep: str = " "
+    *args,
+    color: str = "green",
+    bold: bool = False,
+    **kwargs,
 ) -> None:
     """
     print to console with specified color
 
     Args:
-        string: str
+        *args: str
             The string you want to print
         color: str
             one of the options: "green", "yellow", "cyan", "red"
@@ -107,10 +130,6 @@ def print_with_color(
         bold: bool
             Whether to print in bold
     """
-    assert isinstance(sep, str)
-    targets = [str(x) for x in args]
-    string = sep.join(targets)
-
     color = str(color).lower()
     color_printer_map: Dict[str, Callable] = {
         "green": print_green,
@@ -124,9 +143,9 @@ def print_with_color(
     }
     if color in color_printer_map:
         color_print = color_printer_map[color]
-        color_print(string=string, bold=bold)
+        color_print(*args, bold=bold, **kwargs)
     else:
-        print_bold(string=string, bold=bold)
+        print_bold(*args, bold=bold, **kwargs)
     return
 
 
@@ -134,3 +153,5 @@ printc = print_with_color
 
 if __name__ == "__main__":
     printc("Hello,", "World!", color="yellow", bold=True)
+    print_green("hi", "hi", "hi", "hi", end="", bold=True, sep=", ")
+    print_cyan("end")
