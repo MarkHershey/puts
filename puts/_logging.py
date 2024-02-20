@@ -1,5 +1,6 @@
 import logging
 import os
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Union
 
@@ -10,15 +11,16 @@ def init_logger(
     log_dir: Union[str, Path] = Path("logs/"),
     stream_only: bool = False,
     reset: bool = True,
+    max_file_size: int = 10 * 1024 * 1024,  # 10MB
 ):
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
 
-    # create the stream handler that logs everything with color to terminal
+    # Create the stream handler that logs everything with color to terminal
     sh = colorlog.StreamHandler()
     sh.setLevel(logging.DEBUG)
 
-    # define formatter for the stream handler
+    # Define formatter for the stream handler
     color_log_formatter = colorlog.ColoredFormatter(
         fmt="%(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(message)s %(black)s(%(filename)s:%(lineno)s)",
         datefmt=None,
@@ -45,15 +47,15 @@ def init_logger(
         debug_log_fp: Path = log_dir / "debug.log"
         error_log_fp: Path = log_dir / "error.log"
 
-        # create the first file handler that records all logs
-        fh1 = logging.FileHandler(debug_log_fp, mode="a")
+        # Create the first file handler that records all logs with RotatingFileHandler
+        fh1 = RotatingFileHandler(debug_log_fp, maxBytes=max_file_size, backupCount=5)
         fh1.setLevel(logging.DEBUG)
 
-        # create the second file handler that records error or more critical logs only
-        fh2 = logging.FileHandler(error_log_fp, mode="a")
+        # Create the second file handler that records error or more critical logs only with RotatingFileHandler
+        fh2 = RotatingFileHandler(error_log_fp, maxBytes=max_file_size, backupCount=5)
         fh2.setLevel(logging.ERROR)
 
-        # define formatter for file handlers
+        # Define formatter for file handlers
         file_log_formatter = logging.Formatter(
             fmt="%(asctime)s\t%(levelname)-8s\t%(filename)s:%(lineno)s\t%(message)s ",
             datefmt="%Y-%m-%d %H:%M:%S",
@@ -61,13 +63,13 @@ def init_logger(
         fh1.setFormatter(file_log_formatter)
         fh2.setFormatter(file_log_formatter)
 
-    # remove all existing handlers if any
+    # Remove all existing handlers if any
     if reset and logger.hasHandlers():
         logger.handlers = []
 
-    # add colored Stream Handler to the logger
+    # Add colored Stream Handler to the logger
     logger.addHandler(sh)
-    # add File Handlers to the logger
+    # Add File Handlers to the logger
     if not stream_only:
         logger.addHandler(fh1)
         logger.addHandler(fh2)
